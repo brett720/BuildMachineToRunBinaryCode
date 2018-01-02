@@ -1,0 +1,323 @@
+set 1
+ld r1
+set 9
+st r1
+
+set 2
+ld r2
+set 10
+st r2
+
+set 3
+ld r3
+set 13
+st r3
+		// y_temp (13,14), ynew(15,16)
+set 4
+ld r4
+set 14
+st r4	
+set 0
+st r1
+set 11
+st r1
+set 12
+st r1
+set 15
+st r1
+set 16	// Store them in memory
+st r1 	// x_temp (9,10), xnew(11,12)  
+		// y_temp (13,14), ynew(15,16)
+
+set 17
+st r1
+set 18
+st r1
+set 19
+st r1
+set 20
+st r1	//t_temp(17,18), t_new(19,20)
+
+set 0	
+st r11	// i -> r11 , i = 0
+
+// Begin for loop
+set 13
+st r5
+set 14
+st r6	// r5, r6 = y_temp 
+set 128
+st r1
+set 0
+add r5
+equal r0
+beq 8
+AND r1
+equal 128
+beq 210 // beq negative
+set 0
+add r6
+AND r1
+equal 128
+beq 200	// beq negative, check y_temp >= 0
+
+set 0
+add r5
+st r12
+set 0
+add r6
+st r13
+set 140
+st r15	// current address in r15
+J 230	// (y_temp >>> i)	
+set 9
+ld r1
+set 10
+ld r2	// r1, r2 -> x_temp
+set 0
+add r2
+add r13
+st r3
+set 0
+add r9	// add with the overflow
+add r1
+add r12
+st r4
+set 11
+sta r3	
+set 12
+sta r4	// x_new = x_temp + (y_temp >>> i)
+
+set 0
+add r1
+st r12
+set 0
+add r2
+st r13
+set 200
+st r15
+J 226	// (-x_temp)
+set 206
+st r15
+J 192	// (-x_temp)>>>1
+set 13
+st r1
+set 14
+st r2	// r1, r2 -> y_temp
+
+set 0
+add r2
+add r13
+st r3
+set 0
+add r0	// add with overflow
+add r1
+add r12
+st r4
+set 15
+sta r3	
+set 16
+sta r4	//y_new  = y_temp + ((-x_temp)>>>i);
+
+## 1 << (11-i) ##
+set 0
+NOR r1
+add r1
+add r11
+st r1	// r1 = ii-i
+set 0
+add r1
+sub r7 	
+st r2	// r2 = MSB move
+lt r0
+beq 18
+set 0
+st r3
+set 1
+sl 2	
+st r1	// r1 = MSB of 1 << (11-i)
+set 0
+st r3
+J 12
+set 1
+sl 2	// r1 = 1 << (11-i)
+st r3
+set 0
+st r1	// r1, r3 = 1 << (11-i)
+
+set 17
+ld r5
+set 18
+ld r6
+set 0
+add r3
+add r6
+st r3
+set 0
+add r9
+add r5
+add r1
+st r1
+set 19
+sta r1
+set 20
+sta r3	// t_new  = t_temp + (1<<(11-i));
+J 106	// Jump to else statement
+// Label negative
+set 0
+add r5
+st r12
+set 0
+add r6
+st r13
+set 352 
+st r15
+J 156	// -y_temp
+set 358
+st r15
+J 142		// (-y_temp)>>>i
+set 9
+st r1
+set 10
+st r2	// r1, r2 is x_temp
+set 0
+add r2
+add r13
+st r4
+set 9
+sta r4	
+set 0
+add r12
+add r1
+add r9
+st r3
+set 10
+sta r3	// r3, r4 is x_new
+set 0
+add r1
+st r12
+set 0
+add r2
+st r13	 
+J 124	// r12, r13 is (x_temp >>>i)
+set 13
+st r1
+set 14
+st r2
+set 0
+add r2
+add r13
+st r3
+set 15
+sta r3
+set 0
+add r1
+add r12
+add r0
+st r4
+set 16
+sta r4	// y_new  = y_temp + (x_temp>>>i);
+
+## 1 << (11-i) ##
+set 0
+NOR r1
+add r1
+add r11
+st r1	// r1 = ii-i
+set 0
+add r1
+sub r7 	
+st r2	// r2 = MSB move
+lt r0
+beq 18
+set 0
+st r3
+set 1
+sl 2	
+st r1	// r1 = MSB of 1 << (11-i)
+set 0
+st r3
+J 12
+set 1
+sl 2	// r1 = 1 << (11-i)
+st r3
+set 0
+st r1	// r1, r3 = 1 << (11-i)
+
+set 0
+add r1
+st r12
+set 0
+add r3
+st r13
+J 76	//r12, r13 is -(1<<(11-i))
+set 17
+ld r1
+set 18
+ld r2	//r1, r2 is t_temp
+set 0
+add r2
+add r13
+st r3
+set 19
+sta r3
+set 0
+add r1
+add r13
+add r9
+st r4
+set 20
+sta r4	// t_new  = t_temp - (1<<(11-i))
+ 
+// ENDIF	
+set 11
+ld r1
+set 12
+ld r2
+set 9
+sta r1
+set 10
+sta r2	// x_temp = x_new
+
+set 15
+ld r1
+set 16
+ld r2
+set 13
+sta r1
+set 14
+sta r2	// y_temp = y_new
+
+set 19
+ld r1
+set 20
+ld r2
+set 17
+sta r1
+set 18
+sta r2	// t_temp = t_new
+
+set 1
+st r1
+set 0
+add r11
+add r1
+lt r12
+beq -250	//loop again i<12
+
+set 9
+st r1
+set 5
+sta r1
+set 10
+st r2
+set 6
+sta r2	// r = x_temp
+set 17
+st r1
+set 7
+sta r1
+set 18
+st r2
+set 8
+sta r2	// t = t_temp

@@ -1,0 +1,128 @@
+set 0      //acu = 0
+st r1      //r1 = 0  count
+
+set 9      //acu = 9
+ld r2     //r2 = value from 9
+set 0      //acu = 0
+add r2     //acu = value from 9
+sl 4 
+sr 4 
+st r2      //given string for search  
+
+set 32     //acu = 32
+st r3                                         // r3 = 32 
+
+//begin 32
+set 0 
+add r3   //acu = r3
+ld r4                                        //r4 = value from 32
+
+set 0  //
+add r3 //
+st r12 //
+//i from left to right 
+set 0            //acu = 0
+st r5            //r5 = i = 0
+
+//check whether i = 5
+set 5            //acu = 5
+equal r5         //1 or 0
+
+st r9            //r9 = 1 or 0
+set 118            //acu = num to jump
+st r10        //r10 = num to jump 
+set 0
+add r9          //acu = 1 or 0
+beq r10        //need to calculate, 1 jump to end
+
+set 0             //acu = 0
+st r6             //r6 = 0 = j
+
+set 0       //acu = 0
+add r4      //acu = r4
+st r8       //r8 = r4
+
+//left shift 
+set 0
+add r5            //acu = r5
+equal r6          // r6 ?= r5
+
+st r9            //r9 = 1 or 0
+set 22           //acu = num to jump
+st r10          //r10 = num to jump 
+set 0
+add r9      //acu = 1 or 0
+beq r10   //endleftshift      // need to calculate, 1 jump to shiftend 
+
+
+set 0 
+add r8
+sl 1
+st r8       //r8 = value after shift 1 of r4
+set 1             //acu = 1
+add r6            
+st r6           //r6 += 1
+set -36            //acu = -36
+st r11           // r11 = -36
+j r11        
+
+//right shift 4
+set 0        //acu = 0
+add r8       //acu = r8
+sr 4         //acu = after right shift r8 by 4
+
+equal r2      //whether string match 
+st r9            //r9 = 1 or 0
+set 4           //acu = num to jump
+st r10          //r10 = num to jump 
+set 1          //acu = 1
+add r5         //acu = i + 1= r5 + 1
+st r5
+
+
+set 0
+add r9      //acu = 1 or 0
+
+beq r10   //endleftshift      // need to calculate, 1 jump to shiftend
+set 12            //acu = 12
+st r11           // r11 = 12
+j r11            //jump down 
+set 1     //acu = 1
+add r1    // r1 += 1 => count + 1
+st r1 
+
+set 255
+equal r1
+st r9            //r9 = 1 or 0
+set 36           //acu = num to jump
+st r10          //r10 = num to jump 
+set 0
+add r9      //acu = 1 or 0
+beq r10
+
+set -122            //acu = -122
+st r11           // r11 = -122
+j r11           // jump back
+
+//r3 = 32 => right 
+set 1     //acu = 1
+add r3    //acu = r3 + 1
+st r3     //r3 += 1
+
+//check r3 is less than 64 bytes 
+set 96
+equal r3 
+st r9            //r9 = 1 or 0
+set 8           //acu = num to jump
+st r10          //r10 = num to jump 
+set 0
+add r9      //acu = 1 or 0
+beq r10
+
+set -160
+st r11      //r11 = num to jump 
+j r11       //jump back 
+
+//store count in loaction 10
+set 10 
+sta r1

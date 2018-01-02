@@ -1,0 +1,114 @@
+set 0
+st r14 
+set 4
+st r8
+set 9
+ld r1
+set 0 
+add r1
+sl r8
+sr r8
+st r1 
+set 31
+st r6
+label loop_32_96
+set 1 
+add r6
+st r6
+set 96
+equal r6
+set end_program
+beq
+set 0
+add r6 
+ld r3
+set 1
+add r6
+ld r4
+set 0
+st r5
+label head_0_7
+set 5
+st r7
+set 0
+add r5
+equal r7
+set case_5_6_7
+beq
+set 6
+st r7
+set 0
+add r5
+equal r7
+set case_5_6_7
+beq
+set 7
+st r7
+set 0 
+add r5
+equal r7
+set case_5_6_7
+beq
+set 4
+st r8
+set 0
+add r3
+sl r5
+sr r8
+equal r1
+set 0
+add r14
+add r15
+st r14
+set 255
+st r7
+set 0 
+add r14
+equal r7
+set end_program
+beq
+set 8
+st r7
+set 1
+add r5
+st r5
+equal r7
+set loop_32_96
+beq
+set head_0_7
+j
+label case_5_6_7
+set 4
+st r8
+set 0
+add r3
+sl r6
+sr r8
+st r2
+set 12
+sub r5
+st r9
+set 0
+add r4
+sr r9
+or r2
+st r2
+equal r1
+set 0
+add r14
+add r15
+st r14
+set 8
+st r7
+set 1
+add r5
+st r5
+equal r7
+set loop_32_96
+beq
+set head_0_7
+j
+label end_program
+set 10
+sta r14
+halt

@@ -1,0 +1,255 @@
+set 128			// divident = [#128:#129]
+ld r2 			// divident=[r2:r1] divident_temp=[r10:r9]
+ld r10    		// divisor =[#130]
+set 129			
+ld r1
+ld r9			// divisor = r3 divisor_temp = r4
+set 130			// divident_neg = r5, divisor_neg = r6
+ld r3 			// quotient = [r8:r7]  div = [r12, r11]
+ld r4			
+	 			
+set 255			// indicate the end of program
+st r15
+set 0 
+euqal r3 		// if divisor == 0, jump to the end.
+beq r15
+
+set 0 
+add r2
+sr 7
+st r13
+set 8
+st r15
+set 1
+equal r13		// check if divident is negative
+beq r15 		// jump 8, jump 4 lines.
+
+set 26
+st r15 			// jump 26, jump 13 lines
+jump r15		// not negative, divident_neg = 0
+
+set 1 			// jump to here from line 25
+st r5 			//divident_neg = 1
+set 0
+nor r2
+st r10
+nor r1
+st r13
+set 1
+add r13			// divident_temp = ~dividend + 1
+st r9
+
+set 0			// jump to here from line 28
+add r3
+sr 7
+st r13
+set 12
+st r15
+set 1
+equal r13		// check if divisor is negative
+beq r15 		// jump 6 lines 
+
+set 42
+st r15
+jump r15		// not negative, divisor_neg = 0
+
+set 1 			// jump to here from line 49
+st r6			// divisor_neg = 1
+set 0
+nor r3
+st r13
+set 1
+add r13			// divisor_temp = ~divisor + 1
+st r4
+set 246
+st r15
+set 0
+st r1 			// reuse r1 = 0 as counter of for loop
+set 16 		// for ( r1 = 0; r1 < 16; r1)
+equal r1
+beq r15			// jump out of the loop
+
+set 0
+add r12
+sl 1
+st r12
+set 0
+add r11
+sr 7
+or r12
+st r12			// r12 = {r12[6:0], r11[7]}
+set 0
+add r11
+sl 1
+st r11			// r11 = r11 << 1
+
+set 8
+lt r1 			// if counter r1 < 8, we use upper bits, 
+beq B2			// otherwise lower bits of divdenttemp{r10;r9}
+				// r1 > 8, work with r9
+set 0
+add r1
+subi 8
+st r2 			// r2 = r1 - 8
+set 0
+add r9
+st r14 			// get r14 = r19 for calculating bit
+set 0
+
+equal r2 		// begin of this loop which jump from line111
+beq B4 			// if r2 != 0, starting shift to left
+set 0
+add r14
+sl 1			// << 1 for each count of r2
+st r14
+set 0
+add r2
+subi 1
+st r2 			// r2 = r2 - 1
+set -22
+st r15
+jump r15 		// jump to line 99 in for loop
+				// using r10, r10 << r1 then r10 >> 7
+set 0
+add r10
+st r14 			// get r14 = r10 for calculating bit
+set 0
+add r1
+st r2 			// r2 = r1 as counter for inner for loop
+set 26
+st r15
+set 0
+equal r2 		// jump to line 137
+beq r15 		// if r2 != 0, starting shift to left
+set 0
+add r14
+sl 1			// << 1 for each count of r2
+st r14
+set 0
+add r2
+subi 1
+st r2 			// r2 = r2 - 1
+set 24
+st r15
+jump r15 		// jump to line 121
+
+set 0		// jump to here from 124
+ld r14
+sr 7
+or r11 			// r14 >> 7 to get the single bit we need
+st r11			// or r11 to get div[14:0]:dividend_temp[15-i]
+
+set 68
+st r15 
+set 0
+equal r12		// check if upper bits of div equal to zero
+beq r15			// if equal, compare lower bits and divisor
+
+set 24
+st r15
+set 0
+add r4
+lt r11
+beq r15 		// jump to line 162
+
+set 0
+add r4
+sub r11
+st r2			// in the case div[7:0] == divisor
+set 56
+st r15
+set 0
+euqal r2 
+beq r15			// and div[15:8] != 0 			
+				// in the case of div[7:0] < divisor
+set 0 			// jump from line 152
+add r4
+sub r11 		// accumulator = divisor - r11
+st r11
+nor r11
+st r11 			// r11 = divisor - r11
+set 1
+add r11
+st r11			// r11 = ~r11 + 1 (2's complement)
+set 0
+add r12		
+subi 1
+st r12 			// r12 = r12 - 1 for carry out 
+
+set 30
+st r15
+jump r15 		// jump to line 192
+
+D1: 
+set 58
+st r15
+set 0 		// to here from line 147
+add r4 			// compare divisor_temp and lower bits
+lt r11
+beq r15			// div < divisor_temp
+
+D6:set 0
+add r11
+sub r4 			// when divisor_temp < lower bits of div
+st r11			// simply r11 = r11 - r4
+
+D3:				// jump to here from line 182
+set 0 			// quotient = {quotient[14:0],1}
+add r8
+sl 1
+st r8
+set 0
+add r7			
+sr 7 			// r8 = {r8 << 1, r7[7]}
+add r8			
+st r8 
+set 0
+add r7
+sr 1
+sl 1
+st r7
+set 1
+add r7
+st r7 			// r7 = {r7 << 1 add 1}
+set -216
+st r15
+jump r15
+
+set 0			// quotient = {quotient[14:0],0}
+add r8
+sl 1
+st r8
+set 0 			// r8 = {r8 << 1, r7[7]}
+add r7			
+sr 7
+add r8
+st r8 
+set 0
+add r7 			
+sr 1
+sl 1 			// r7 = r7 << 1
+st r7
+
+set 1 			// r1 = r1 + 1
+add r1
+st r1
+
+set 48
+st r15
+jump r15
+				// end of loop
+set 6			// check if need to change sign of result
+st r15			// else halt, Result in [r8:r7]
+set 0
+add r6
+equal r5
+beq r15
+halt 0
+
+nor r8			// quotient = ~quotient + 1
+st r8
+nor r7
+st r13
+set 1
+add r13
+st r7

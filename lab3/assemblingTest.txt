@@ -1,0 +1,19 @@
+Set 1
+add r2
+sub r15
+st r0
+ld r1
+or r0
+equal r2
+beq
+lt r2
+sta r10
+asr 3
+sl 5
+sr 7
+nor r5
+j 
+and r11
+set 9
+st r1   // asd
+HALT

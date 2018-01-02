@@ -1,0 +1,18 @@
+set 10
+st r2
+set 1
+st r1
+Set 0
+add r3
+label A
+set 0 
+Add r3
+Add r1
+st r3
+equal r2
+set B
+beq 
+set A
+Jump 
+label B
+Halt 
